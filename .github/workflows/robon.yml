@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: my-step
+        run: echo "Hello robo!"
+        
       # Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -21,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: "3.2"
 
       # Install dependencies (Robot Framework and Selenium Library)
       - name: Install dependencies
