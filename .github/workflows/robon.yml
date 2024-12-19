@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.2"
+          python-version: "3.14.0-alpha.0"
 
       # Install dependencies (Robot Framework and Selenium Library)
       - name: Install dependencies
