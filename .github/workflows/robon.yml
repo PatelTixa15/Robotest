@@ -34,37 +34,37 @@ jobs:
           pip install selenium
 
   
-      # Install Google Chrome
-      - name: Install Google Chrome
+    # Install Microsoft Edge
+      - name: Install Microsoft Edge
         run: |
           sudo apt update
           sudo apt install -y wget curl
-          curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome.deb
-          sudo dpkg -i google-chrome.deb
-          sudo apt --fix-broken install -y
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main"
+          sudo apt update
+          sudo apt install -y microsoft-edge-stable
 
-      # Install ChromeDriver (matching Chrome version)
-      - name: Install ChromeDriver
+      # Install Edge WebDriver (matching Edge version)
+      - name: Install Edge WebDriver
         run: |
-          # Get the major version of Chrome (e.g., 131)
-          CHROME_MAJOR_VERSION=$(google-chrome-stable --version | awk '{print $3}' | cut -d'.' -f1)
-          echo "Detected Chrome major version: $CHROME_MAJOR_VERSION"
+          # Get the major version of Edge (e.g., 131)
+          EDGE_MAJOR_VERSION=$(microsoft-edge --version | awk '{print $3}' | cut -d'.' -f1)
+          echo "Detected Edge major version: $EDGE_MAJOR_VERSION"
           
-          # Get the corresponding ChromeDriver version using the LATEST_RELEASE endpoint
-          CHROMEDRIVER_VERSION=$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION)
+          # Get the corresponding Edge WebDriver version using the LATEST_RELEASE endpoint
+          EDGE_DRIVER_VERSION=$(curl -sSL https://msedgedriver.azureedge.net/LATEST_RELEASE_$EDGE_MAJOR_VERSION)
           
-          if [ -z "$CHROMEDRIVER_VERSION" ]; then
-            echo "Error: Unable to find matching ChromeDriver version."
+          if [ -z "$EDGE_DRIVER_VERSION" ]; then
+            echo "Error: Unable to find matching Edge WebDriver version."
             exit 1
           fi
           
-          echo "Using ChromeDriver version: $CHROMEDRIVER_VERSION"
+          echo "Using Edge WebDriver version: $EDGE_DRIVER_VERSION"
           
-          # Download and install the corresponding ChromeDriver version
-          wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/  # Make chromedriver available in PATH
-
+          # Download and install the corresponding Edge WebDriver version
+          wget https://msedgedriver.azureedge.net/$EDGE_DRIVER_VERSION/edgedriver_linux64.zip
+          unzip edgedriver_linux64.zip
+          sudo mv msedgedriver /usr/local/bin/  # Make msedgedriver available in PATH
 
       # Run Robot Framework tests
       - name: Run Robot Framework tests
