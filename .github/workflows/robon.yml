@@ -33,7 +33,7 @@ jobs:
           pip install robotframework-seleniumlibrary
           pip install selenium
 
-  # Install Google Chrome
+      # Install Google Chrome
       - name: Install Google Chrome
         run: |
           sudo apt update
@@ -45,11 +45,23 @@ jobs:
       # Install ChromeDriver (matching Chrome version)
       - name: Install ChromeDriver
         run: |
+          # Get Chrome version
           CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}' | sed 's/\./_/g')
           echo "Detected Chrome version: $CHROME_VERSION"
-          wget https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip
+          
+          # Download and install the matching version of ChromeDriver
+          CHROMEDRIVER_VERSION=$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} || echo "not_found")
+          
+          if [ "$CHROMEDRIVER_VERSION" = "not_found" ]; then
+            echo "Error: Unable to find matching ChromeDriver version."
+            exit 1
+          fi
+          
+          echo "Using ChromeDriver version: $CHROMEDRIVER_VERSION"
+          wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/  # Make chromedriver available in PATH
+
 
 
       # Run Robot Framework tests
